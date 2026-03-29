@@ -1,0 +1,95 @@
+Simple two pointer approach 
+1. convert the string in char array both string
+2.useing the for loop 
+  1. get char of the both string 
+  2. if char equal then contine
+  3. if char not equal
+    1. using the function getindex to find the index of char in s1 string 
+  4. and find the diff and diff equal 2 then swap the character
+  5. if diff not equal 2 then return false
+3. check both string is equal return true otherwise false;
+  
+------------------------------ java -----------------------------------------------
+  Leetcode -> 2839
+class Solution {
+    private static boolean operationmakeequal(String s1, String s2) {
+        if (s1.length() != s2.length()) return false;
+
+        char[] chars1 = s1.toCharArray();
+        char[] chars2 = s2.toCharArray();
+        int n = chars1.length;
+
+        for (int i = 0; i < n; i++) {
+            if (chars1[i] != chars2[i]) {
+                int idx = getindex(chars1, chars2[i], i);
+                if (idx == -1) return false;
+                // swap
+                char temp = chars1[i];
+                chars1[i] = chars1[idx];
+                chars1[idx] = temp;
+            }
+        }
+
+        return checkstring(chars1, chars2);
+    }
+
+    private static int getindex(char[] chars1, char target, int start) {
+        int n = chars1.length;
+
+        for (int i = start + 1; i < n; i++) {
+            if (chars1[i] == target && (i - start) == 2) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static boolean checkstring(char[] chars1, char[] chars2) {
+        for (int i = 0; i < chars1.length; i++) {
+            if (chars1[i] != chars2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean canBeEqual(String s1, String s2) {
+        return operationmakeequal(s1, s2);
+    }
+} 
+--------------------------python----------------------------------------------
+  class Solution:
+    def operation_make_equal(self, s1, s2):
+        if len(s1) != len(s2):
+            return False
+
+        chars1 = list(s1)
+        chars2 = list(s2)
+        n = len(chars1)
+
+        for i in range(n):
+            if chars1[i] != chars2[i]:
+                idx = self.get_index(chars1, chars2[i], i)
+                if idx == -1:
+                    return False
+                # swap
+                chars1[i], chars1[idx] = chars1[idx], chars1[i]
+
+        return self.check_string(chars1, chars2)
+
+    def get_index(self, chars1, target, start):
+        n = len(chars1)
+
+        for i in range(start + 1, n):
+            if chars1[i] == target and (i - start) == 2:
+                return i
+        return -1
+
+    def check_string(self, chars1, chars2):
+        for i in range(len(chars1)):
+            if chars1[i] != chars2[i]:
+                return False
+        return True
+
+    def canBeEqual(self, s1, s2):
+        return self.operation_make_equal(s1, s2)
