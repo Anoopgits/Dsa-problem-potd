@@ -1,0 +1,104 @@
+class Solution {
+    public String generateString(String str1, String str2) {
+        int n=str1.length();
+        int m=str2.length();
+        int N=n+m-1;
+        char [] word=new char[N];
+        boolean []canchange=new boolean[N];
+        for(int i=0;i<N;i++){
+            word[i]='$';
+        }
+        for(int i=0;i<n;i++){
+            if(str1.charAt(i)=='T'){
+                int idx=i;
+                for(int j=0;j<m;j++){
+                    if(word[idx]!='$' && word[idx]!=str2.charAt(j)){
+                        return "";
+                    }
+                    word[idx]=str2.charAt(j);
+                    idx++;
+                }
+            }
+        }
+        for(int i=0;i<N;i++){
+            if(word[i]=='$'){
+                word[i]='a';
+                canchange[i]=true;
+            }
+        }
+        for(int i=0;i<n;i++){
+            if(str1.charAt(i)=='F'){
+                if(issame(word,str2,i,m)){
+                    boolean changed=false;
+                    for(int k=i+m-1;k>=i;k--){
+                        if(canchange[k]){
+                            word[k]='b';
+                            canchange[k]=true;
+                            changed = true;
+                            break;
+                        }
+                    }
+                    if(!changed) return "";
+                }
+            }
+        }
+        return new String(word);
+    }
+    private boolean issame(char[]word,String str2,int i,int m){
+        for(int j=0;j<m;j++){
+            if(word[i]!=str2.charAt(j)){
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+}
+----------------------------------------------------python----------------------------
+  class Solution:
+    def generateString(self, str1: str, str2: str) -> str:
+        n = len(str1)
+        m = len(str2)
+        N = n + m - 1
+        
+        word = ['$'] * N
+        canchange = [False] * N
+
+        # Place str2 where str1 has 'T'
+        for i in range(n):
+            if str1[i] == 'T':
+                idx = i
+                for j in range(m):
+                    if word[idx] != '$' and word[idx] != str2[j]:
+                        return ""
+                    word[idx] = str2[j]
+                    idx += 1
+
+        # Fill remaining with 'a'
+        for i in range(N):
+            if word[i] == '$':
+                word[i] = 'a'
+                canchange[i] = True
+
+        # Handle 'F' cases
+        for i in range(n):
+            if str1[i] == 'F':
+                if self.issame(word, str2, i, m):
+                    changed = False
+                    for k in range(i + m - 1, i - 1, -1):
+                        if canchange[k]:
+                            word[k] = 'b'
+                            canchange[k] = True
+                            changed = True
+                            break
+                    if not changed:
+                        return ""
+
+        return "".join(word)
+
+    def issame(self, word, str2, i, m):
+        for j in range(m):
+            if word[i] != str2[j]:
+                return False
+            i += 1
+        return True
